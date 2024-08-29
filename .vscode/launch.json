@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ProyectifyApplication",
+            "request": "launch",
+            "mainClass": "com.escobar.proyectify.ProyectifyApplication",
+            "projectName": "Proyectify"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ProyectifyApplication<Proyectify>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.escobar.Proyectify.ProyectifyApplication",
+            "projectName": "Proyectify",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
