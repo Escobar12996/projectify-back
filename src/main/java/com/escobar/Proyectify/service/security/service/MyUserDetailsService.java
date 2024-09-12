@@ -1,8 +1,8 @@
-package com.escobar.Proyectify.service.security;
+package com.escobar.Proyectify.service.security.service;
 
 import com.escobar.Proyectify.model.User;
-import com.escobar.Proyectify.model.UserPrincipal;
 import com.escobar.Proyectify.service.implement.UserServiceImp;
+import com.escobar.Proyectify.service.security.model.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

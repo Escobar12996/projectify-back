@@ -1,7 +1,8 @@
-package com.escobar.Proyectify.service.security;
+package com.escobar.Proyectify.service.security.service;
 
 import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.service.implement.UserServiceImp;
+import com.escobar.Proyectify.service.security.dto.LoginRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserServiceAuth {
 
     @Autowired
     private JWTService jwtService;
@@ -32,12 +33,12 @@ public class UserService {
         return user;
     }
     
-    public String verify(User user) {
+    public String verify(LoginRequest user) {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user.getUsername());
         } else {
-            return "fail";
+            return "Internal Error";
         }
     }
 }

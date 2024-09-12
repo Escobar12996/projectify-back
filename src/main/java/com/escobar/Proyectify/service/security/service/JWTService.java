@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security;
+package com.escobar.Proyectify.service.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
