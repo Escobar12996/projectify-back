@@ -64,7 +64,7 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {
             @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
-    private List<Role> roles;
+    private List<Rol> roles;
 
     public Long getId() {
         return id;
@@ -98,11 +98,11 @@ public class User implements Serializable {
         this.enabled = enabled;
     }
 
-    public List<Role> getRoles() {
+    public List<Rol> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<Rol> roles) {
         this.roles = roles;
     }
 
