@@ -66,6 +66,15 @@ public class User implements Serializable {
             @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
     private List<Rol> roles;
 
+    @Column(name = "user_expired", nullable = false)
+    private boolean expired;
+    
+    @Column(name = "user_locked", nullable = false)
+    private boolean locked;
+    
+    @Column(name = "user_credentials_expired", nullable = false)
+    private boolean credentialsExpired;
+    
     public Long getId() {
         return id;
     }
@@ -129,5 +138,31 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public boolean isExpired() {
+		return expired;
+	}
+
+	public void setExpired(boolean expired) {
+		this.expired = expired;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+
+	public boolean isCredentialsExpired() {
+		return credentialsExpired;
+	}
+
+	public void setCredentialsExpired(boolean credentialsExpired) {
+		this.credentialsExpired = credentialsExpired;
+	}
+    
+    
 }
 

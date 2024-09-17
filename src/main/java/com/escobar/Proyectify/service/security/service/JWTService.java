@@ -62,7 +62,6 @@ public class JWTService {
         return claimResolver.apply(claims);
     }
 
-    @SuppressWarnings("deprecation")
 	private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getKey())
