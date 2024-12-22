@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -33,8 +34,9 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, List<String> authorities) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("authorities", authorities);
         return Jwts.builder()
                 .claims()
                 .add(claims)

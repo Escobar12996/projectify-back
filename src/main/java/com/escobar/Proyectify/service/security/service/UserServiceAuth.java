@@ -3,11 +3,13 @@ package com.escobar.Proyectify.service.security.service;
 import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.service.implement.UserServiceImp;
 import com.escobar.Proyectify.service.security.dto.LoginRequest;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +36,21 @@ public class UserServiceAuth {
     }
     
     public String verify(LoginRequest user) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
-        } else {
-            return "Internal Error";
-        }
+    Authentication authentication = authManager.authenticate(
+        new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+    );
+
+    if (authentication.isAuthenticated()) {
+        // Extraer authorities
+        List<String> authorities = authentication.getAuthorities()
+                                                 .stream()
+                                                 .map(GrantedAuthority::getAuthority)
+                                                 .collect(Collectors.toList());
+
+        // Generar token con authorities
+        return jwtService.generateToken(user.getUsername(), authorities);
+    } else {
+        return "Internal Error";
     }
+}
 }
