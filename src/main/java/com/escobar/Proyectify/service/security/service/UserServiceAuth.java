@@ -25,32 +25,56 @@ public class UserServiceAuth {
     @Autowired
     private UserServiceImp repo;
 
-
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-
 
     public User register(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
         return user;
     }
-    
+
     public String verify(LoginRequest user) {
-    Authentication authentication = authManager.authenticate(
-        new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-    );
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-    if (authentication.isAuthenticated()) {
-        // Extraer authorities
-        List<String> authorities = authentication.getAuthorities()
-                                                 .stream()
-                                                 .map(GrantedAuthority::getAuthority)
-                                                 .collect(Collectors.toList());
+        if (authentication.isAuthenticated()) {
+            // Extraer authorities
+            List<String> authorities = authentication.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
 
-        // Generar token con authorities
-        return jwtService.generateToken(user.getUsername(), authorities);
-    } else {
-        return "Internal Error";
+            // Generar token con authorities
+            return jwtService.generateToken(user.getUsername(), authorities);
+        } else {
+            return "Internal Error";
+        }
     }
-}
+
+    public String renewToken(String refreshToken) {
+        try {
+    
+            // Obtener el usuario del refresh token
+            refreshToken = refreshToken.substring(7);
+            String username = jwtService.extractUserName(refreshToken);
+    
+            // Verificar que el usuario existe
+            User user = repo.findByUsername(username);
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
+    
+            // Obtener los roles del usuario
+            List<String> authorities = user.getRoles()
+                    .stream()
+                    .map(role -> role.getName()) // Asumiendo que `Role` tiene un método `getName`
+                    .collect(Collectors.toList());
+    
+            // Generar un nuevo access token
+            return jwtService.generateToken(username, authorities);
+    
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid or expired refresh token", e);
+        }
+    }
 }
