@@ -5,10 +5,8 @@
 package com.escobar.Proyectify.service.implement;
 
 import com.escobar.Proyectify.model.User;
-import com.escobar.Proyectify.repository.IUserDao;
+import com.escobar.Proyectify.model.repository.IUserDao;
 import com.escobar.Proyectify.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImp implements UserService{
-
-    private Logger logger = LoggerFactory.getLogger(UserServiceImp.class);
 
     @Autowired
     private IUserDao userDao;
