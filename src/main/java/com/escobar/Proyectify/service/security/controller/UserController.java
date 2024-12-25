@@ -1,8 +1,6 @@
 package com.escobar.Proyectify.service.security.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,16 +40,17 @@ public class UserController {
      * }
      */
 
+    @Operation(summary = "Renew Token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized: wrong credentials", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden: access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/renew-token")
-     public ResponseEntity<?> renewToken(HttpServletRequest request) {
-    // Accede al encabezado Authorization
-    String authorizationHeader = request.getHeader("Authorization");
-        try {
-            String newToken = service.renewToken(authorizationHeader);
-            return ResponseEntity.ok(newToken);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
-        }
+    public LoginResponse renewToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        return new LoginResponse(service.renewToken(authorizationHeader));
+
     }
 
 }
