@@ -4,7 +4,7 @@
  */
 package com.escobar.Proyectify.model.repository.service;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.escobar.Proyectify.model.Proyect;
 import com.escobar.Proyectify.model.User;
@@ -15,7 +15,9 @@ import com.escobar.Proyectify.model.User;
  */
 public interface ProyectService {
 
-    public Optional<Proyect> findByIdAndownUser(Long id, User ownUser);
+    public Proyect findByIdAndownUser(Long id, User ownUser);
+
+    public List<Proyect> findByownUser(User ownUser);
 
     public Proyect save(Proyect proyect);
 

@@ -1,6 +1,6 @@
 package com.escobar.Proyectify.model.repository.service.implement;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,18 @@ public class ProyectServiceImp implements ProyectService{
     private IProyectDao userDao;
 
     @Override
-    public Optional<Proyect> findByIdAndownUser(Long id, User ownUser) {
-        return this.userDao.findById(id);
+    public Proyect findByIdAndownUser(Long id, User ownUser) {
+        return this.userDao.findByIdAndownUser(id, ownUser);
     }
 
     @Override
     public Proyect save(Proyect proyect) {
         return this.userDao.save(proyect);
+    }
+
+    @Override
+    public List<Proyect> findByownUser(User ownUser) {
+        return this.userDao.findByownUser(ownUser);
     }
 
 }
