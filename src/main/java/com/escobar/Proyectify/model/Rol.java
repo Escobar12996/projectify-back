@@ -22,13 +22,14 @@ import java.io.Serializable;
 @Table(name = "roles")
 public class Rol implements Serializable {
 
+    public static final int MAXROLENAME = 20;
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, length = 20, name="role_name")
+    @Column(unique = true, length = MAXROLENAME, name="role_name")
     private String name;
 
     public Long getId() {

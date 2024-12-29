@@ -19,13 +19,14 @@ import jakarta.persistence.ManyToOne;
 @Table(name = "proyects")
 public class Proyect implements Serializable {
 
+    public static final int MAXPROYECTNAME = 50;
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = false, length = 50, name="proyect_name", nullable = false)
+    @Column(unique = false, length = MAXPROYECTNAME, name="proyect_name", nullable = false)
     private String name;
 
 

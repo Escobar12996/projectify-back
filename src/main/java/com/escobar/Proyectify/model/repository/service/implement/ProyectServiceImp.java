@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.escobar.Proyectify.model.Proyect;
+import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.model.repository.IProyectDao;
 import com.escobar.Proyectify.model.repository.service.ProyectService;
 
@@ -20,7 +21,7 @@ public class ProyectServiceImp implements ProyectService{
     private IProyectDao userDao;
 
     @Override
-    public Optional<Proyect> findById(Long id) {
+    public Optional<Proyect> findByIdAndownUser(Long id, User ownUser) {
         return this.userDao.findById(id);
     }
 

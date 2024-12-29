@@ -7,6 +7,7 @@ package com.escobar.Proyectify.model.repository.service;
 import java.util.Optional;
 
 import com.escobar.Proyectify.model.Proyect;
+import com.escobar.Proyectify.model.User;
 
 /**
  *
@@ -14,7 +15,7 @@ import com.escobar.Proyectify.model.Proyect;
  */
 public interface ProyectService {
 
-    public Optional<Proyect> findById(Long id);
+    public Optional<Proyect> findByIdAndownUser(Long id, User ownUser);
 
     public Proyect save(Proyect proyect);
 
