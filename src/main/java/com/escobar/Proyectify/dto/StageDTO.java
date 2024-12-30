@@ -3,18 +3,18 @@ package com.escobar.Proyectify.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.escobar.Proyectify.model.Proyect;
+import com.escobar.Proyectify.model.Stage;
 
-public class ProyectDTO {
+public class StageDTO {
     private Long id;
     private String name;
-    private List<StageDTO> stages;
+    private List<TaskDTO> tasks;
 
-    public ProyectDTO(Proyect proyect) {
-        this.id = proyect.getId();
-        this.name = proyect.getName();
-        this.stages = proyect.getStage().stream()
-                            .map(StageDTO::new)
+    public StageDTO(Stage stage) {
+        this.id = stage.getId();
+        this.name = stage.getName();
+        this.tasks = stage.getTasks().stream()
+                            .map(TaskDTO::new)
                             .collect(Collectors.toList());
     }
 
@@ -35,11 +35,11 @@ public class ProyectDTO {
         this.id = id;
     }
 
-    public void setStages(List<StageDTO> stage) {
-        this.stages = stage;
+    public void setTasks(List<TaskDTO> tasks) {
+        this.tasks = tasks;
     }
 
-    public List<StageDTO> getStages() {
-        return stages;
+    public List<TaskDTO> getTasks() {
+        return tasks;
     }
 }

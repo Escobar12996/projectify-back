@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -24,6 +26,10 @@ public class Stage {
 
     @Column(length = MAXSTAGENAME, name = "stage_name", nullable = false)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "stage_proyect_id", nullable = false)
+    private Proyect proyect;
 
     @OneToMany(mappedBy = "stage", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
@@ -56,4 +62,11 @@ public class Stage {
         this.tasks = tasks;
     }
 
+    public void setProyect(Proyect proyect) {
+        this.proyect = proyect;
+    }
+
+    public Proyect getProyect() {
+        return proyect;
+    }
 }

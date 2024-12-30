@@ -1,7 +1,10 @@
 package com.escobar.Proyectify.model;
 
 import java.io.Serializable;
+import java.util.List;
+
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 /**
  *
@@ -34,6 +38,9 @@ public class Proyect implements Serializable {
     @JoinColumn(name = "proyect_own_user", nullable = false)
     private User ownUser;
 
+    @OneToMany(mappedBy = "proyect", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Stage> stage;
+
     public Long getId() {
         return id;
     }
@@ -56,6 +63,14 @@ public class Proyect implements Serializable {
 
     public void setOwnUser(User user) {
         this.ownUser = user;
+    }
+
+    public void setStage(List<Stage> stage) {
+        this.stage = stage;
+    }
+
+    public List<Stage> getStage() {
+        return stage;
     }
 }
 
