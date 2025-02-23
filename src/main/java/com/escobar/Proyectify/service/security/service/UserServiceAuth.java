@@ -64,10 +64,9 @@ public class UserServiceAuth {
                 throw new RuntimeException("User not found");
             }
     
-            // Obtener los roles del usuario
             List<String> authorities = user.getRoles()
                     .stream()
-                    .map(role -> role.getName()) // Asumiendo que `Role` tiene un método `getName`
+                    .map(role -> role.getName())
                     .collect(Collectors.toList());
     
             // Generar un nuevo access token

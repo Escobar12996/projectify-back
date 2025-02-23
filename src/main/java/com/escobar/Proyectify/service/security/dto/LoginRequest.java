@@ -1,8 +1,13 @@
 package com.escobar.Proyectify.service.security.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequest {
 
+	@NotBlank(message = "Username required")
 	private String username;
+
+	@NotBlank(message = "Password required")
 	private String password;
 
 	public String getUsername() {

@@ -1,7 +1,10 @@
 package com.escobar.Proyectify.service.security.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginResponse {
 
+	@NotBlank(message = "Token required")
 	private String token;
 
 	public LoginResponse(String token) {
