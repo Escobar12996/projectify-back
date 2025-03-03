@@ -47,7 +47,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "Unauthorized: wrong credentials", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "403", description = "Forbidden: access denied", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
-    @PostMapping("/renew-token")
+    @PostMapping(value = "/renew-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse renewToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         return new LoginResponse(service.renewToken(authorizationHeader));

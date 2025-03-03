@@ -2,6 +2,7 @@ package com.escobar.Proyectify.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,7 @@ public class ProyectController {
     private ProyectServiceImp proyectServiceImp;
 
     
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -41,7 +42,7 @@ public class ProyectController {
         return new ProyectListDTO(proyectServiceImp.save(proyect));
     }
 
-    @GetMapping("/getProyects")
+    @GetMapping(value = "/getProyects", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public List<ProyectListDTO> getProyects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +54,7 @@ public class ProyectController {
                 .toList();
     }
 
-    @GetMapping("/getProyect/{id}")
+    @GetMapping(value = "/getProyect/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ProyectDTO getProyect(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
