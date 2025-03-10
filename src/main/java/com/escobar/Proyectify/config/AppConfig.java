@@ -3,16 +3,14 @@ package com.escobar.Proyectify.config;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Getter // Lombok generará los getters automáticamente
-@Setter // Lombok generará los setters automáticamente
-@Component
-@ConfigurationProperties(prefix = "configuracion")
+@Getter
+@Setter
+@Configuration // Es mejor usar @Configuration en vez de @Component
+@ConfigurationProperties(prefix = "configuration") // Asegura que Spring cargue las propiedades correctamente
 public class AppConfig {
 
-    private int campoNombreMinimo = 3;
-    private int campoNombreMaximo = 50;
-    private int jwtExpiracion = 3600;
+    private String secretKey;
 
 }

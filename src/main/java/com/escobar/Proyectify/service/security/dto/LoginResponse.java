@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class LoginResponse {
 
-	@NotBlank(message = "Token required")
+	@NotBlank(message = "token.required")
 	private String token;
 
 	public LoginResponse(String token) {

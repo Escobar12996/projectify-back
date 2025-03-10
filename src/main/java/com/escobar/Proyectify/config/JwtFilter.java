@@ -4,10 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,47 +14,61 @@ import com.escobar.Proyectify.dto.ErrorResponse;
 import com.escobar.Proyectify.service.security.service.JWTService;
 import com.escobar.Proyectify.service.security.service.MyUserDetailsService;
 import io.jsonwebtoken.JwtException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.i18n.LocaleContextHolder;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JWTService jwtService;
+    private final JWTService jwtService;
+    private final MyUserDetailsService userDetailsService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    ApplicationContext context;
+    public JwtFilter(JWTService jwtService, MyUserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String authHeader = request.getHeader("Authorization");
-            String token = null;
-            String username = null;
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7);
-                username = jwtService.extractUserName(token); // Aquí puede lanzar una excepción
-            }
+                String token = authHeader.substring(7);
+                String username = jwtService.extractUserName(token);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
-                if (jwtService.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                            null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    if (jwtService.validateToken(token, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
             }
 
             filterChain.doFilter(request, response);
-        } catch (JwtException | IllegalArgumentException e) { // Captura errores de JWT inválido
-            new ResponseEntity<>(new ErrorResponse("User credentials have expired"), HttpStatus.UNAUTHORIZED);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"User credentials have expired\"}");
+        } catch (JwtException | IllegalArgumentException e) {
+            handleException(response, getTranslatedMessage("error.token.expired"), HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
+    private void handleException(HttpServletResponse response, String message, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        response.setContentType("application/json");
+        response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(message)));
+    }
+
+    private String getTranslatedMessage(String key) {
+        Locale locale = LocaleContextHolder.getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        return bundle.getString(key);
+    }
 }

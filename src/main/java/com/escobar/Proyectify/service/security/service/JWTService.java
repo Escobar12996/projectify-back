@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.escobar.Proyectify.config.AppConfig;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -21,14 +23,19 @@ import java.util.function.Function;
 public class JWTService {
 
 
-    private String secretkey = "qwerty";
+    private String secretK;
+
+    public JWTService(AppConfig appConfig) {
+        // Tomar la clave desde AppConfig
+        this.secretK = Base64.getEncoder().encodeToString(appConfig.getSecretKey().getBytes());
+    }
 
     public JWTService() {
 
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
+            secretK = Base64.getEncoder().encodeToString(sk.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -50,7 +57,7 @@ public class JWTService {
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretK);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

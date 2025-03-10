@@ -1,6 +1,6 @@
 package com.escobar.Proyectify.service.security.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +15,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserServiceAuth service;
+    private final UserServiceAuth service;
+
+    public UserController(UserServiceAuth service) {
+        this.service = service;
+    }
 
     @Operation(summary = "Login")
     @ApiResponses(value = {
@@ -31,15 +36,7 @@ public class UserController {
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse login(@RequestBody LoginRequest user) {
         return new LoginResponse(service.verify(user));
-
     }
-
-    /*
-     * @PostMapping("/register")
-     * public User register(@RequestBody User user) {
-     * return service.register(user);
-     * }
-     */
 
     @Operation(summary = "Renew Token")
     @ApiResponses(value = {
@@ -50,8 +47,14 @@ public class UserController {
     @PostMapping(value = "/renew-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public LoginResponse renewToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
+
+        Locale locale = LocaleContextHolder.getLocale();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new IllegalArgumentException(bundle.getString("error.missing.authorization"));
+        }
+
         return new LoginResponse(service.renewToken(authorizationHeader));
-
     }
-
 }

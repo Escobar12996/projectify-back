@@ -47,7 +47,7 @@ public class UserServiceAuth {
             // Generar token con authorities
             return jwtService.generateToken(user.getUsername(), authorities);
         } else {
-            return "Internal Error";
+            return "error.internal";
         }
     }
 
@@ -61,7 +61,7 @@ public class UserServiceAuth {
             // Verificar que el usuario existe
             User user = repo.findByUsername(username);
             if (user == null) {
-                throw new RuntimeException("User not found");
+                throw new RuntimeException("error.accout.notFound");
             }
     
             List<String> authorities = user.getRoles()
@@ -73,7 +73,7 @@ public class UserServiceAuth {
             return jwtService.generateToken(username, authorities);
     
         } catch (Exception e) {
-            throw new RuntimeException("Invalid or expired refresh token", e);
+            throw new RuntimeException("error.token.expired");
         }
     }
 }
