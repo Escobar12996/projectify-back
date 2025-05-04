@@ -6,9 +6,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
-import com.escobar.Proyectify.config.AppConfig;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -22,13 +19,7 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-
     private String secretK;
-
-    public JWTService(AppConfig appConfig) {
-        // Tomar la clave desde AppConfig
-        this.secretK = Base64.getEncoder().encodeToString(appConfig.getSecretKey().getBytes());
-    }
 
     public JWTService() {
 
