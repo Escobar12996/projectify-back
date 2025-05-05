@@ -2,21 +2,16 @@ package com.escobar.Proyectify.service.security.service;
 
 import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.model.UserSession;
-import com.escobar.Proyectify.model.repository.service.UserSessionService;
 import com.escobar.Proyectify.model.repository.service.implement.UserSessionServiceImp;
 import com.escobar.Proyectify.service.implement.UserServiceImp;
 import com.escobar.Proyectify.service.security.dto.LoginRequest;
 import com.escobar.Proyectify.service.security.model.UserPrincipal;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
