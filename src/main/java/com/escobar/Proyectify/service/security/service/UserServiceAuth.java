@@ -1,11 +1,18 @@
 package com.escobar.Proyectify.service.security.service;
 
 import com.escobar.Proyectify.model.User;
+import com.escobar.Proyectify.model.UserSession;
+import com.escobar.Proyectify.model.repository.service.UserSessionService;
+import com.escobar.Proyectify.model.repository.service.implement.UserSessionServiceImp;
 import com.escobar.Proyectify.service.implement.UserServiceImp;
 import com.escobar.Proyectify.service.security.dto.LoginRequest;
+import com.escobar.Proyectify.service.security.model.UserPrincipal;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +32,9 @@ public class UserServiceAuth {
     @Autowired
     private UserServiceImp repo;
 
+    @Autowired
+    private UserSessionServiceImp userSessionService;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     public User register(User user) {
@@ -38,42 +48,59 @@ public class UserServiceAuth {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            // Extraer authorities
-            List<String> authorities = authentication.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-
-            // Generar token con authorities
-            return jwtService.generateToken(user.getUsername(), authorities);
+            UserPrincipal userPrinc = (UserPrincipal) authentication.getPrincipal();
+            String newToken = jwtService.generateToken(userPrinc);
+            this.registerSession(userPrinc.getUser(), newToken);
+            return newToken;
         } else {
             return "error.internal";
         }
     }
 
-    public String renewToken(String refreshToken) {
+    public String renewToken(String refreshToken, UserPrincipal userPrincipal) {
         try {
-    
+
             // Obtener el usuario del refresh token
             refreshToken = refreshToken.substring(7);
             String username = jwtService.extractUserName(refreshToken);
-    
+
             // Verificar que el usuario existe
-            User user = repo.findByUsername(username);
-            if (user == null) {
+            User userEsist = repo.findByUsername(username);
+            if (userEsist == null) {
                 throw new RuntimeException("error.accout.notFound");
             }
-    
-            List<String> authorities = user.getRoles()
-                    .stream()
-                    .map(role -> role.getName())
-                    .collect(Collectors.toList());
-    
+
             // Generar un nuevo access token
-            return jwtService.generateToken(username, authorities);
-    
+            String newToken = jwtService.generateToken(userPrincipal);
+            this.renewSession(userPrincipal.getUser(), refreshToken, newToken);
+
+            return newToken;
+
         } catch (Exception e) {
             throw new RuntimeException("error.token.expired");
         }
+    }
+
+    public void renewSession(User user, String oldToken, String newToken) {
+        UserSession oldSession = userSessionService.findByUserAndToken(user, oldToken);
+        if (oldSession != null) {
+            userSessionService.delete(oldSession);
+        }
+    
+        UserSession newSession = new UserSession();
+        newSession.setUser(user);
+        newSession.setToken(newToken);
+        newSession.setValid(true);
+        newSession.setCreatedAt(LocalDateTime.now());
+        userSessionService.save(newSession);
+    }
+
+    public void registerSession(User user, String token) {    
+        UserSession newSession = new UserSession();
+        newSession.setUser(user);
+        newSession.setToken(token);
+        newSession.setValid(true);
+        newSession.setCreatedAt(LocalDateTime.now());
+        userSessionService.save(newSession);
     }
 }

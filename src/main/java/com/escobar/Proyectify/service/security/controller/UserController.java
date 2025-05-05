@@ -2,12 +2,16 @@ package com.escobar.Proyectify.service.security.controller;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.escobar.Proyectify.dto.ErrorResponse;
+import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.service.security.dto.LoginRequest;
 import com.escobar.Proyectify.service.security.dto.LoginResponse;
+import com.escobar.Proyectify.service.security.model.UserPrincipal;
 import com.escobar.Proyectify.service.security.service.UserServiceAuth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,13 +52,10 @@ public class UserController {
     public LoginResponse renewToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
 
-        Locale locale = LocaleContextHolder.getLocale();
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        UserPrincipal user = ((UserPrincipal) principal);
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new IllegalArgumentException(bundle.getString("error.missing.authorization"));
-        }
-
-        return new LoginResponse(service.renewToken(authorizationHeader));
+        return new LoginResponse(service.renewToken(authorizationHeader, user));
     }
 }

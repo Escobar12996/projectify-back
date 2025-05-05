@@ -4,8 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.escobar.Proyectify.model.UserSession;
+import com.escobar.Proyectify.model.repository.service.implement.UserSessionServiceImp;
+import com.escobar.Proyectify.service.security.model.UserPrincipal;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +25,11 @@ public class JWTService {
 
     private String secretK;
 
-    public JWTService() {
+    private final UserSessionServiceImp userSessionServiceImp;
+
+    public JWTService(UserSessionServiceImp userSessionServiceImp) {
+
+        this.userSessionServiceImp = userSessionServiceImp;
 
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
@@ -32,15 +40,15 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username, List<String> authorities) {
+    public String generateToken(UserPrincipal user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities", authorities);
+        claims.put("authorities", user.getAuthorities());
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(username)
+                .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 1000)) 
+                .expiration(new Date(System.currentTimeMillis() + 1 * 60 * 60 * 1000))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -70,9 +78,10 @@ public class JWTService {
                 .getPayload();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserPrincipal userDetails) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        UserSession userSession = this.userSessionServiceImp.findByUserAndToken(userDetails.getUser(), token);
+        return (userName.equals(userDetails.getUsername()) && userSession != null && userSession.isValid() && !isTokenExpired(userSession.getToken()));
     }
 
     private boolean isTokenExpired(String token) {

@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.escobar.Proyectify.dto.ErrorResponse;
+import com.escobar.Proyectify.service.security.model.UserPrincipal;
 import com.escobar.Proyectify.service.security.service.JWTService;
 import com.escobar.Proyectify.service.security.service.MyUserDetailsService;
 import io.jsonwebtoken.JwtException;
@@ -43,11 +44,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = jwtService.extractUserName(token);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    UserPrincipal userDetails = userDetailsService.loadUserByUsername(username);
 
                     if (jwtService.validateToken(token, userDetails)) {
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
