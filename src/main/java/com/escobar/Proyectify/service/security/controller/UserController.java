@@ -1,14 +1,20 @@
 package com.escobar.Proyectify.service.security.controller;
 
-import org.springframework.context.i18n.LocaleContextHolder;
+import java.net.http.HttpResponse;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.escobar.Proyectify.dto.ErrorResponse;
-import com.escobar.Proyectify.model.User;
+import com.escobar.Proyectify.dto.OkResponse;
 import com.escobar.Proyectify.service.security.dto.LoginRequest;
 import com.escobar.Proyectify.service.security.dto.LoginResponse;
 import com.escobar.Proyectify.service.security.model.UserPrincipal;
@@ -19,9 +25,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
+@RequestMapping("/api")
 @RestController
 public class UserController {
 
@@ -58,4 +63,22 @@ public class UserController {
 
         return new LoginResponse(service.renewToken(authorizationHeader, user));
     }
+
+    @Operation(summary = "LogOut")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = OkResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PostMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        UserPrincipal user = ((UserPrincipal) principal);
+        service.logOutSession(user.getUser(), authorizationHeader);
+
+    return ResponseEntity.ok(Map.of("message", "Sesión cerrada correctamente"));
+}
 }

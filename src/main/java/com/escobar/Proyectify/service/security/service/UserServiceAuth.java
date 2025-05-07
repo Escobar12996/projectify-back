@@ -98,4 +98,12 @@ public class UserServiceAuth {
         newSession.setCreatedAt(LocalDateTime.now());
         userSessionService.save(newSession);
     }
+
+    public void logOutSession(User user, String token) {
+        token = token.substring(7);
+        UserSession oldSession = userSessionService.findByUserAndToken(user, token);
+        if (oldSession != null) {
+            userSessionService.delete(oldSession);
+        }
+    }
 }
