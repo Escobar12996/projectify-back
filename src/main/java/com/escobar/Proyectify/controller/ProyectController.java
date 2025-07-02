@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.escobar.Proyectify.config.AppConfig;
 import com.escobar.Proyectify.dto.ProyectDTO;
 import com.escobar.Proyectify.dto.ProyectListDTO;
 import com.escobar.Proyectify.dto.ProyectRequest;
@@ -20,14 +22,13 @@ import com.escobar.Proyectify.model.repository.service.implement.ProyectServiceI
 import com.escobar.Proyectify.service.security.model.UserPrincipal;
 import jakarta.transaction.Transactional;
 
-@RequestMapping("/proyect")
+@RequestMapping(AppConfig.baseUrl + AppConfig.proyectUrlBase)
 @RestController
 public class ProyectController {
 
     @Autowired
     private ProyectServiceImp proyectServiceImp;
 
-    
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {

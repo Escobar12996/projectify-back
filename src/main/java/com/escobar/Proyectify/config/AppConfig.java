@@ -12,7 +12,8 @@ public class AppConfig {
 			List.of("/api/login", "error", "/v2/api-docs", "/swagger-resources/**", "/configuration/ui",
 					"/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**"));
 	public static final List<String> authorizeOrigins = new ArrayList<>(List.of("http://localhost:4200"));
-	public static final List<String> allowedMethods = new ArrayList<>(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	public static final List<String> allowedMethods = new ArrayList<>(
+			List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	public static final List<String> allowedHeaders = new ArrayList<>(List.of(authHeader, "Content-Type"));
 	public static final List<String> axposedHeaders = new ArrayList<>(List.of(authHeader));
 
@@ -22,5 +23,10 @@ public class AppConfig {
 	public static final String apiDescription = "API for my application";
 	public static final String apiSecuritySchemes = "BearerAuth";
 	public static final String bearerFormat = "JWT";
+
+	// Urls
+	public static final String baseUrl = "/api/v1";
+
+	public static final String proyectUrlBase = "/proyect";
 
 }
