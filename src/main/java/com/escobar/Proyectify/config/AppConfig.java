@@ -30,7 +30,9 @@ public class AppConfig {
 
 	// Urls
 	public static final String baseUrl = "/api/v1";
-
 	public static final String proyectUrlBase = "/proyect";
+	public static final String register = "/register";
+	public static final String getUserAllProyects = "/getProyects";
+	public static final String getProyect = "/getProyect";
 
 }

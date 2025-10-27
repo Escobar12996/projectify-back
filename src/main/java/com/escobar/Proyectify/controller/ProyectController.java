@@ -29,7 +29,7 @@ public class ProyectController {
     @Autowired
     private ProyectServiceImp proyectServiceImp;
 
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = AppConfig.register, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -42,7 +42,7 @@ public class ProyectController {
         return new ProyectListDTO(proyectServiceImp.save(proyect));
     }
 
-    @GetMapping(value = "/getProyects", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = AppConfig.getUserAllProyects, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public List<ProyectListDTO> getProyects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,7 +54,7 @@ public class ProyectController {
                 .toList();
     }
 
-    @GetMapping(value = "/getProyect/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = AppConfig.getProyect + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ProyectDTO getProyect(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
