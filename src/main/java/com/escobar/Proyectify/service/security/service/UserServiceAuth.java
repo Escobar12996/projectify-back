@@ -62,7 +62,7 @@ public class UserServiceAuth {
             // Verificar que el usuario existe
             User userEsist = repo.findByUsername(username);
             if (userEsist == null) {
-                throw new RuntimeException("error.accout.notFound");
+                throw new RuntimeException("error.account.notFound");
             }
 
             // Generar un nuevo access token

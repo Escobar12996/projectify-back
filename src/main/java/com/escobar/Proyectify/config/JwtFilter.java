@@ -67,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private String getTranslatedMessage(String key) {
         Locale locale = LocaleContextHolder.getLocale();
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(AppConfig.bundleLocale, locale);
         return bundle.getString(key);
     }
 }

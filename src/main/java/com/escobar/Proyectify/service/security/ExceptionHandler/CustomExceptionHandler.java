@@ -1,5 +1,6 @@
 package com.escobar.Proyectify.service.security.ExceptionHandler;
 
+import com.escobar.Proyectify.config.AppConfig;
 import com.escobar.Proyectify.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.ResourceBundle;
 public class CustomExceptionHandler {
 
     private String getMessage(String key, Locale locale) {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(AppConfig.bundleLocale, locale);
         return bundle.getString(key);
     }
 

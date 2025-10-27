@@ -24,6 +24,10 @@ public class AppConfig {
 	public static final String apiSecuritySchemes = "BearerAuth";
 	public static final String bearerFormat = "JWT";
 
+	//Messages Traduction
+	public static final String bundleLocale = "bundleLocale";
+
+
 	// Urls
 	public static final String baseUrl = "/api/v1";
 
