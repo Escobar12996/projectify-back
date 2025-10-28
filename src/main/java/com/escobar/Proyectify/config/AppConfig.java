@@ -25,11 +25,16 @@ public class AppConfig {
 	public static final String bearerFormat = "JWT";
 
 	//Messages Traduction
-	public static final String bundleLocale = "bundleLocale";
-
+	public static final String bundleLocale = "messages";
 
 	// Urls
-	public static final String baseUrl = "/api/v1";
+	public static final String baseUrlApi = "/api";
+	public static final String baseUrl = baseUrlApi + "/v1";
+
+	public static final String login = "/login";
+	public static final String renew = "/renew-token";
+	public static final String logout = "/logout";
+
 	public static final String proyectUrlBase = "/proyect";
 	public static final String register = "/register";
 	public static final String getUserAllProyects = "/getProyects";
