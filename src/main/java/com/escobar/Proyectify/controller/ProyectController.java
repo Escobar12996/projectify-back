@@ -30,7 +30,7 @@ public class ProyectController {
     private ProyectServiceImp proyectServiceImp;
 
     @PostMapping(value = AppConfig.register, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(AppConfig.creatorRole)")
+    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).creatorRole)")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -43,7 +43,7 @@ public class ProyectController {
     }
 
     @GetMapping(value = AppConfig.getUserAllProyects, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(AppConfig.userRole)")
+    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).userRole)")
     @Transactional
     public List<ProyectListDTO> getProyects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,7 +56,7 @@ public class ProyectController {
     }
 
     @GetMapping(value = AppConfig.getProyect + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(AppConfig.userRole)")
+    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).userRole)")
     @Transactional
     public ProyectDTO getProyect(Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
