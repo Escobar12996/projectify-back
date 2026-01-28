@@ -5,6 +5,11 @@ import java.util.List;
 
 public class AppConfig {
 
+	// Role
+	public static final String creatorRole = "CREATOR";
+	public static final String adminRole = "ADMIN";
+	public static final String userRole = "USER";
+
 	// Security
 	public static final String authHeader = "Authorization";
 	public static final String authHeaderStart = "Bearer ";
@@ -24,7 +29,7 @@ public class AppConfig {
 	public static final String apiSecuritySchemes = "BearerAuth";
 	public static final String bearerFormat = "JWT";
 
-	//Messages Traduction
+	// Messages Traduction
 	public static final String bundleLocale = "messages";
 
 	// Urls

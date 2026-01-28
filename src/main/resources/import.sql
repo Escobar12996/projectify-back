@@ -4,8 +4,10 @@ INSERT INTO `users` (user_username, user_password, user_enabled, user_name, user
 
 INSERT INTO `roles` (role_name) VALUES ('ROLE_ADMIN');
 INSERT INTO `roles` (role_name) VALUES ('ROLE_USER');
+INSERT INTO `roles` (role_name) VALUES ('ROLE_CREATOR');
 
 INSERT INTO `users_roles` (user_id, role_id) VALUES (2, 2);
+INSERT INTO `users_roles` (user_id, role_id) VALUES (1, 3);
 INSERT INTO `users_roles` (user_id, role_id) VALUES (1, 2);
 INSERT INTO `users_roles` (user_id, role_id) VALUES (1, 1);
 
