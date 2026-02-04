@@ -1,6 +1,6 @@
 package com.escobar.Proyectify.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.escobar.Proyectify.component.SecurityProps;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,11 +25,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
+    private final UserDetailsService userDetailsService;
+    private final SecurityProps securityProps;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    public SecurityConfig(
+            JwtFilter jwtFilter,
+            UserDetailsService userDetailsService,
+            SecurityProps securityProps
+    ) {
+        this.jwtFilter = jwtFilter;
+        this.userDetailsService = userDetailsService;
+        this.securityProps = securityProps;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,9 +45,10 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(AppConfig.authorizeHttpRequests.toArray(new String[0]))
+                        .requestMatchers(securityProps.authorizeHttpRequests().toArray(new String[0]))
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -62,10 +71,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(AppConfig.authorizeOrigins);
-        configuration.setAllowedMethods(AppConfig.allowedMethods);
-        configuration.setAllowedHeaders(AppConfig.allowedHeaders);
-        configuration.setExposedHeaders(AppConfig.axposedHeaders);
+        configuration.setAllowedOrigins(securityProps.authorizeOrigins());
+        configuration.setAllowedMethods(securityProps.allowedMethods());
+        configuration.setAllowedHeaders(securityProps.allowedHeaders());
+        configuration.setExposedHeaders(securityProps.exposedHeaders());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

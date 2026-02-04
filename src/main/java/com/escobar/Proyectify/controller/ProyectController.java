@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class ProyectController {
     private ProyectServiceImp proyectServiceImp;
 
     @PostMapping(value = AppConfig.register, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).creatorRole)")
+    @PreAuthorize("hasAnyRole(@roles.creator())")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -43,7 +44,7 @@ public class ProyectController {
     }
 
     @GetMapping(value = AppConfig.getUserAllProyects, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).userRole)")
+    @PreAuthorize("hasAnyRole(@roles.user())")
     @Transactional
     public List<ProyectListDTO> getProyects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -56,9 +57,9 @@ public class ProyectController {
     }
 
     @GetMapping(value = AppConfig.getProyect + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole(T(com.escobar.Proyectify.config.AppConfig).userRole)")
+    @PreAuthorize("hasAnyRole(@roles.user())")
     @Transactional
-    public ProyectDTO getProyect(Long id) {
+    public ProyectDTO getProyect(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         User user = ((UserPrincipal) principal).getUser();
