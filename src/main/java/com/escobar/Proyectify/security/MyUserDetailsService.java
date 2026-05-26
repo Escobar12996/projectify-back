@@ -1,8 +1,8 @@
-package com.escobar.Proyectify.service.security.service;
+package com.escobar.Proyectify.security;
 
 import com.escobar.Proyectify.model.User;
-import com.escobar.Proyectify.service.implement.UserServiceImp;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
+import com.escobar.Proyectify.service.impl.UserServiceImp;
+import com.escobar.Proyectify.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

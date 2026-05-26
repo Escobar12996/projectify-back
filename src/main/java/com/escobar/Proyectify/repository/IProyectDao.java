@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.model.repository;
+package com.escobar.Proyectify.repository;
 
 import java.util.List;
 

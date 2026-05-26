@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.model.repository;
+package com.escobar.Proyectify.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

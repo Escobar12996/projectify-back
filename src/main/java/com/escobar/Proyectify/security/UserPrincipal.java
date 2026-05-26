@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security.model;
+package com.escobar.Proyectify.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

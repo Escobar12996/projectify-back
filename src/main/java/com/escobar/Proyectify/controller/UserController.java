@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security.controller;
+package com.escobar.Proyectify.controller;
 
 import java.util.Locale;
 import java.util.Map;
@@ -18,10 +18,10 @@ import com.escobar.Proyectify.component.UrlsProps;
 import com.escobar.Proyectify.config.AppConfig;
 import com.escobar.Proyectify.dto.ErrorResponse;
 import com.escobar.Proyectify.dto.OkResponse;
-import com.escobar.Proyectify.service.security.dto.LoginRequest;
-import com.escobar.Proyectify.service.security.dto.LoginResponse;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
-import com.escobar.Proyectify.service.security.service.UserServiceAuth;
+import com.escobar.Proyectify.security.dto.LoginRequest;
+import com.escobar.Proyectify.security.dto.LoginResponse;
+import com.escobar.Proyectify.security.UserPrincipal;
+import com.escobar.Proyectify.security.UserServiceAuth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

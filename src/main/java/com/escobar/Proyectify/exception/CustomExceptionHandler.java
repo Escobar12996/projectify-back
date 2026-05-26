@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security.ExceptionHandler;
+package com.escobar.Proyectify.exception;
 
 import com.escobar.Proyectify.config.AppConfig;
 import com.escobar.Proyectify.dto.ErrorResponse;

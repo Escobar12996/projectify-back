@@ -19,8 +19,8 @@ import com.escobar.Proyectify.dto.ProyectListDTO;
 import com.escobar.Proyectify.dto.ProyectRequest;
 import com.escobar.Proyectify.model.Proyect;
 import com.escobar.Proyectify.model.User;
-import com.escobar.Proyectify.model.repository.service.implement.ProyectServiceImp;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
+import com.escobar.Proyectify.service.impl.ProyectServiceImp;
+import com.escobar.Proyectify.security.UserPrincipal;
 import jakarta.transaction.Transactional;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security.dto;
+package com.escobar.Proyectify.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

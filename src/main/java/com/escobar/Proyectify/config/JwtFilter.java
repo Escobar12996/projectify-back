@@ -2,9 +2,9 @@ package com.escobar.Proyectify.config;
 
 import com.escobar.Proyectify.component.SecurityProps;
 import com.escobar.Proyectify.dto.ErrorResponse;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
-import com.escobar.Proyectify.service.security.service.JWTService;
-import com.escobar.Proyectify.service.security.service.MyUserDetailsService;
+import com.escobar.Proyectify.security.UserPrincipal;
+import com.escobar.Proyectify.security.JWTService;
+import com.escobar.Proyectify.security.MyUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.model.repository.service.implement;
+package com.escobar.Proyectify.service.impl;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.escobar.Proyectify.model.Proyect;
 import com.escobar.Proyectify.model.User;
-import com.escobar.Proyectify.model.repository.IProyectDao;
-import com.escobar.Proyectify.model.repository.service.ProyectService;
+import com.escobar.Proyectify.repository.IProyectDao;
+import com.escobar.Proyectify.service.ProyectService;
 
 /**
  *

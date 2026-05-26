@@ -1,11 +1,11 @@
-package com.escobar.Proyectify.service.security.service;
+package com.escobar.Proyectify.security;
 
 import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.model.UserSession;
-import com.escobar.Proyectify.model.repository.service.implement.UserSessionServiceImp;
-import com.escobar.Proyectify.service.implement.UserServiceImp;
-import com.escobar.Proyectify.service.security.dto.LoginRequest;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
+import com.escobar.Proyectify.service.impl.UserSessionServiceImp;
+import com.escobar.Proyectify.service.impl.UserServiceImp;
+import com.escobar.Proyectify.security.dto.LoginRequest;
+import com.escobar.Proyectify.security.UserPrincipal;
 
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;

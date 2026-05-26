@@ -1,4 +1,4 @@
-package com.escobar.Proyectify.service.security.service;
+package com.escobar.Proyectify.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -7,8 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import com.escobar.Proyectify.model.UserSession;
-import com.escobar.Proyectify.model.repository.service.implement.UserSessionServiceImp;
-import com.escobar.Proyectify.service.security.model.UserPrincipal;
+import com.escobar.Proyectify.service.impl.UserSessionServiceImp;
+import com.escobar.Proyectify.security.UserPrincipal;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
