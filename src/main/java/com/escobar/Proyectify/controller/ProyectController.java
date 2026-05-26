@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.escobar.Proyectify.config.AppConfig;
+import com.escobar.Proyectify.component.UrlsProps;
 import com.escobar.Proyectify.dto.ProyectDTO;
 import com.escobar.Proyectify.dto.ProyectListDTO;
 import com.escobar.Proyectify.dto.ProyectRequest;
@@ -23,19 +23,18 @@ import com.escobar.Proyectify.model.repository.service.implement.ProyectServiceI
 import com.escobar.Proyectify.service.security.model.UserPrincipal;
 import jakarta.transaction.Transactional;
 
-@RequestMapping(AppConfig.baseUrl + AppConfig.proyectUrlBase)
 @RestController
+@RequestMapping(UrlsProps.BASE_URL + UrlsProps.PROYECT_URL_BASE)
 public class ProyectController {
 
     @Autowired
     private ProyectServiceImp proyectServiceImp;
 
-    @PostMapping(value = AppConfig.register, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = UrlsProps.REGISTER, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole(@roles.creator())")
     public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        User user = ((UserPrincipal) principal).getUser();
+        User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
 
         Proyect proyect = new Proyect();
         proyect.setName(proyectRequest.getNameProyect());
@@ -43,26 +42,23 @@ public class ProyectController {
         return new ProyectListDTO(proyectServiceImp.save(proyect));
     }
 
-    @GetMapping(value = AppConfig.getUserAllProyects, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = UrlsProps.GET_USER_ALL_PROYECTS, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole(@roles.user())")
     @Transactional
     public List<ProyectListDTO> getProyects() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        User user = ((UserPrincipal) principal).getUser();
-        List<Proyect> proyects = proyectServiceImp.findByownUser(user);
-        return proyects.stream()
+        User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
+        return proyectServiceImp.findByownUser(user).stream()
                 .map(ProyectListDTO::new)
                 .toList();
     }
 
-    @GetMapping(value = AppConfig.getProyect + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = UrlsProps.GET_PROYECT + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole(@roles.user())")
     @Transactional
     public ProyectDTO getProyect(@PathVariable Long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        User user = ((UserPrincipal) principal).getUser();
+        User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
         return new ProyectDTO(proyectServiceImp.findByIdAndownUser(id, user));
     }
 }

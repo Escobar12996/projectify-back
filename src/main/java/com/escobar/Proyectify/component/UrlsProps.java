@@ -6,29 +6,28 @@ import org.springframework.stereotype.Component;
 public class UrlsProps {
 
     // Base
-    public final String baseUrlApi = "/api";
-    public final String baseUrl = baseUrlApi + "/v1";
+    public static final String BASE_URL_API = "/api";
+    public static final String BASE_URL     = BASE_URL_API + "/v1";
 
     // Auth
-    public final String login = "/login";
-    public final String renew = "/renew-token";
-    public final String logout = "/logout";
+    public static final String LOGIN  = "/login";
+    public static final String RENEW  = "/renew-token";
+    public static final String LOGOUT = "/logout";
 
     // Proyect
-    public final String proyectUrlBase = "/proyect";
-    public final String register = "/register";
-    public final String getUserAllProyects = "/getProyects";
-    public final String getProyect = "/getProyect";
+    public static final String PROYECT_URL_BASE      = "/proyect";
+    public static final String REGISTER              = "/register";
+    public static final String GET_USER_ALL_PROYECTS = "/getProyects";
+    public static final String GET_PROYECT           = "/getProyect";
 
-    public String baseUrlApi() { return baseUrlApi; }
-    public String baseUrl() { return baseUrl; }
-
-    public String login() { return login; }
-    public String renew() { return renew; }
-    public String logout() { return logout; }
-
-    public String proyectUrlBase() { return proyectUrlBase; }
-    public String register() { return register; }
-    public String getUserAllProyects() { return getUserAllProyects; }
-    public String getProyect() { return getProyect; }
+    // Métodos de instancia para uso desde SpEL en SecurityConfig (@urlsProps)
+    public String baseUrlApi()          { return BASE_URL_API; }
+    public String baseUrl()             { return BASE_URL; }
+    public String login()               { return LOGIN; }
+    public String renew()               { return RENEW; }
+    public String logout()              { return LOGOUT; }
+    public String proyectUrlBase()      { return PROYECT_URL_BASE; }
+    public String register()            { return REGISTER; }
+    public String getUserAllProyects()  { return GET_USER_ALL_PROYECTS; }
+    public String getProyect()          { return GET_PROYECT; }
 }

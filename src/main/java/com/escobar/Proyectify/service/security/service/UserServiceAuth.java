@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,41 +40,31 @@ public class UserServiceAuth {
     }
 
     public String verify(LoginRequest user) {
+        // authManager lanza BadCredentialsException si las credenciales son incorrectas,
+        // que CustomExceptionHandler ya maneja correctamente con traducción
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        if (authentication.isAuthenticated()) {
-            UserPrincipal userPrinc = (UserPrincipal) authentication.getPrincipal();
-            String newToken = jwtService.generateToken(userPrinc);
-            this.registerSession(userPrinc.getUser(), newToken);
-            return newToken;
-        } else {
-            return "error.internal";
-        }
+        UserPrincipal userPrinc = (UserPrincipal) authentication.getPrincipal();
+        String newToken = jwtService.generateToken(userPrinc);
+        registerSession(userPrinc.getUser(), newToken);
+        return newToken;
     }
 
     public String renewToken(String refreshToken, UserPrincipal userPrincipal) {
-        try {
+        refreshToken = refreshToken.substring(7);
+        String username = jwtService.extractUserName(refreshToken);
 
-            // Obtener el usuario del refresh token
-            refreshToken = refreshToken.substring(7);
-            String username = jwtService.extractUserName(refreshToken);
-
-            // Verificar que el usuario existe
-            User userEsist = repo.findByUsername(username);
-            if (userEsist == null) {
-                throw new RuntimeException("error.account.notFound");
-            }
-
-            // Generar un nuevo access token
-            String newToken = jwtService.generateToken(userPrincipal);
-            this.renewSession(userPrincipal.getUser(), refreshToken, newToken);
-
-            return newToken;
-
-        } catch (Exception e) {
-            throw new RuntimeException("error.token.expired");
+        User existingUser = repo.findByUsername(username);
+        if (existingUser == null) {
+            // UsernameNotFoundException es una excepción de Spring Security
+            // que CustomExceptionHandler puede manejar como error de cuenta
+            throw new UsernameNotFoundException("error.account.notFound");
         }
+
+        String newToken = jwtService.generateToken(userPrincipal);
+        renewSession(userPrincipal.getUser(), refreshToken, newToken);
+        return newToken;
     }
 
     public void renewSession(User user, String oldToken, String newToken) {
@@ -81,7 +72,7 @@ public class UserServiceAuth {
         if (oldSession != null) {
             userSessionService.delete(oldSession);
         }
-    
+
         UserSession newSession = new UserSession();
         newSession.setUser(user);
         newSession.setToken(newToken);
@@ -90,7 +81,7 @@ public class UserServiceAuth {
         userSessionService.save(newSession);
     }
 
-    public void registerSession(User user, String token) {    
+    public void registerSession(User user, String token) {
         UserSession newSession = new UserSession();
         newSession.setUser(user);
         newSession.setToken(token);
