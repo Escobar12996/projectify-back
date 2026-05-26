@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,11 @@ import com.escobar.Proyectify.model.User;
 import com.escobar.Proyectify.service.impl.ProyectServiceImp;
 import com.escobar.Proyectify.security.UserPrincipal;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(UrlsProps.BASE_URL + UrlsProps.PROYECT_URL_BASE)
+@Validated
 public class ProyectController {
 
     @Autowired
@@ -32,7 +35,7 @@ public class ProyectController {
 
     @PostMapping(value = UrlsProps.REGISTER, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole(@roles.creator())")
-    public ProyectListDTO register(@RequestBody ProyectRequest proyectRequest) {
+    public ProyectListDTO register(@Valid @RequestBody ProyectRequest proyectRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = ((UserPrincipal) authentication.getPrincipal()).getUser();
 
