@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.escobar.Proyectify.model;
 
 import jakarta.persistence.CascadeType;
@@ -18,11 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.List;
-
-/**
- *
- * @author escobar
- */
 
 @Entity
 @Table(name = "users")
