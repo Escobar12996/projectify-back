@@ -4,16 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.escobar.Proyectify.model.UserSession;
 import com.escobar.Proyectify.service.impl.UserSessionServiceImp;
-import com.escobar.Proyectify.security.UserPrincipal;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,21 +21,13 @@ public class JWTService {
 
     public static final int HOURSTOEXPIRATIONTOKEN = 1;
 
+    @Value("${jwt.secret}")
     private String secretK;
 
     private final UserSessionServiceImp userSessionServiceImp;
 
     public JWTService(UserSessionServiceImp userSessionServiceImp) {
-
         this.userSessionServiceImp = userSessionServiceImp;
-
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretK = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public String generateToken(UserPrincipal user) {
@@ -53,7 +42,6 @@ public class JWTService {
                 .and()
                 .signWith(getKey())
                 .compact();
-
     }
 
     private SecretKey getKey() {
@@ -62,7 +50,6 @@ public class JWTService {
     }
 
     public String extractUserName(String token) {
-        // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -71,7 +58,7 @@ public class JWTService {
         return claimResolver.apply(claims);
     }
 
-	private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()
@@ -92,5 +79,4 @@ public class JWTService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
 }

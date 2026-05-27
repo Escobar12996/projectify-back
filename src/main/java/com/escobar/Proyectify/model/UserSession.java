@@ -13,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class UserSession {
 
-    public static final int LENGTHTOKEN = 512;
+    public static final int LENGTHTOKEN = 1024;
 
     @Id
     @Column(length = 36)
@@ -30,45 +30,18 @@ public class UserSession {
 
     private boolean valid = true;
 
-    // Getters y setters
+    public String getSessionId() { return sessionId; }
+    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
 
-    public String getSessionId() {
-        return sessionId;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
 
-    public User getUser() {
-        return user;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
+    public boolean isValid() { return valid; }
+    public void setValid(boolean valid) { this.valid = valid; }
 }
