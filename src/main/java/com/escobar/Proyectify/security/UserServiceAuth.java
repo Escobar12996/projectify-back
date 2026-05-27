@@ -5,10 +5,10 @@ import com.escobar.Proyectify.model.UserSession;
 import com.escobar.Proyectify.service.impl.UserSessionServiceImp;
 import com.escobar.Proyectify.service.impl.UserServiceImp;
 import com.escobar.Proyectify.security.dto.LoginRequest;
-import com.escobar.Proyectify.security.UserPrincipal;
 
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +31,11 @@ public class UserServiceAuth {
     @Autowired
     private UserSessionServiceImp userSessionService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder encoder;
+
+    public UserServiceAuth(@Value("${security.bcrypt.strength}") int bcryptStrength) {
+        this.encoder = new BCryptPasswordEncoder(bcryptStrength);
+    }
 
     public User register(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
@@ -40,8 +44,6 @@ public class UserServiceAuth {
     }
 
     public String verify(LoginRequest user) {
-        // authManager lanza BadCredentialsException si las credenciales son incorrectas,
-        // que CustomExceptionHandler ya maneja correctamente con traducción
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
@@ -57,8 +59,6 @@ public class UserServiceAuth {
 
         User existingUser = repo.findByUsername(username);
         if (existingUser == null) {
-            // UsernameNotFoundException es una excepción de Spring Security
-            // que CustomExceptionHandler puede manejar como error de cuenta
             throw new UsernameNotFoundException("error.account.notFound");
         }
 
@@ -72,7 +72,6 @@ public class UserServiceAuth {
         if (oldSession != null) {
             userSessionService.delete(oldSession);
         }
-
         UserSession newSession = new UserSession();
         newSession.setUser(user);
         newSession.setToken(newToken);

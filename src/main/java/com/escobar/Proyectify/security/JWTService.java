@@ -19,10 +19,11 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    public static final int HOURSTOEXPIRATIONTOKEN = 1;
-
     @Value("${jwt.secret}")
     private String secretK;
+
+    @Value("${jwt.expiration.hours}")
+    private int hoursToExpiration;
 
     private final UserSessionServiceImp userSessionServiceImp;
 
@@ -38,7 +39,7 @@ public class JWTService {
                 .add(claims)
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + HOURSTOEXPIRATIONTOKEN * 60 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + hoursToExpiration * 60 * 60 * 1000L))
                 .and()
                 .signWith(getKey())
                 .compact();
